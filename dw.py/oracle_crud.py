@@ -1,18 +1,14 @@
-# Importamos librerias
 import oracledb
 import os
 from dotenv import load_dotenv
-# Cargamos variables de entorno
 load_dotenv()
-# Definimos valores gracias a las variables de entorno
 username = os.getenv("ORACLE_USER")
 dsn = os.getenv("ORACLE_DSN")
 password = os.getenv("ORACLE_PASSWORD")
-# Creamos una conexion reutilizable
+
 def get_connection():
     return oracledb.connect(user=username, password=password, dsn=dsn)
 
-# Funcion para crear el esquema de la base de datos
 def create_schema(query):
     try:
         with get_connection() as conn:
@@ -26,132 +22,300 @@ def create_schema(query):
 
 tables = [
     (
-        "CREATE TABLE mascotas ("
+        "CREATE TABLE mascota ("
         "id INTEGER PRIMARY KEY,"
-        "nombre VARCHAR(64) NOT NULL,"
-        "edad INTEGER NOT NULL,"
-        "especie VARCHAR(32) NOT NULL,"
+        "nombre VARCHAR(64),"
+        "edad Number(2),"
+        "especie VARCHAR(32)"
         ")"
     ),
-   (
+    (
         "CREATE TABLE perros ("
         "id INTEGER PRIMARY KEY,"
-        "id_mascota INTEGER NOT NULL,"
-        "vacunas_aplicadas VARCHAR(255),"
-        "FOREIGN KEY (id_mascota) REFERENCES mascotas(id)"
+        "nombre VARCHAR(64),"
+        "especie VARCHAR(32)"
+        "vacunas_aplicada VARCAHR(100"
         ")"
     ),
     (
         "CREATE TABLE gatos ("
         "id INTEGER PRIMARY KEY,"
-        "id_mascota INTEGER NOT NULL,"
-        "fecha_esterilizacion DATE,"
-        "FOREIGN KEY (id_mascota) REFERENCES mascotas(id)"
+        "nombre VARCHAR(64),"
+        "edad Number(2),"
+        "especie VARCHAR(32),"
+        "fecha_esterilizacion VARCHAR(100),"
         ")"
     ),
-       (
-        "CREATE TABLE aves ("
+        (
+        "CREATE TABLE AVES ("
         "id INTEGER PRIMARY KEY,"
-        "id_mascota INTEGER NOT NULL,"
-        "control_vuelo VARCHAR(50),"
-        "tipo_jaula VARCHAR(50),"
-        "FOREIGN KEY (id_mascota) REFERENCES mascotas(id)"
+        "nombre VARCHAR(64),"
+        "edad Number(2),"
+        "especie VARCHAR(32),"
+        "control_vuelo VARCHAR(100),"
+        "tipo_jaula VARCHAR"
         ")"
-    ),
+    )
 ]
 
 for query in tables:
     create_schema(query)
 
-def create_mascota(
+
+# PERSONAS
+# Create - Inserción de datos
+from datetime import datetime
+def create_mascotas(
         id: int,
-        nombres: str,
+        nombre: str,
         edad: int,
         especie: str
 ):
     sql = (
-        "INSERT INTO MASCOTAS (id,nombres,edad,especie)" \
-        "VALUES (:id,:nombres,:edad,:especie"
+        "INSERT INTO MASCOTAS (id, nombre, edad, especie)"
+        "VALUES (:id,:nombre,:edad,:especie,)"
     )
-    
-    parametros = (
-        "id" : id,
 
+    parametros = {
+        "id": id,
+        "nombre": nombre,
+        "edad": edad,
+        "especie": especie,
+    }
 
-    )
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(sql,parametros)
+                print(f"Dato insertado \n {parametros}")
+            conn.commit()
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"Error al insertar datos: {err} \n {parametros}")
 
 def create_perros(
         id: int,
-        nombres: str,
+        nombre: str,
         edad: int,
         especie: str,
-        vacunas_aplicadas: str
+        vacunas_aplicadas : str
 ):
-    pass
+    sql = (
+        "INSERT INTO PERROS (id, nombre, edad, especie, vacunas_aplicadas)"
+        "VALUES (:id,:nombre,:edad,:especie,:vacunas_aplicadas)"
+    )
+
+    parametros = {
+        "id": id,
+        "nombre": nombre,
+        "edad": edad,
+        "especie": especie,
+        "vacunas_aplicadas": vacunas_aplicadas
+    }
+
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(sql,parametros)
+                print(f"Dato insertado \n {parametros}")
+            conn.commit()
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"Error al insertar datos: {err} \n {parametros}")
 
 def create_gatos(
         id: int,
-        nombres: str,
+        nombre: str,
         edad: int,
         especie: str,
-        fecha_esterilizacion: int
+        fecha_esterilizacion : str
 ):
-    pass
+    sql = (
+        "INSERT INTO GATOS (id, nombre, edad, especie, fecha_esterilizacion)"
+        "VALUES (:id,:nombre,:edad,:especie,:fecha_esterilizacion)"
+    )
+        
+    parametros = {
+        "id": id,
+        "nombre": nombre,
+        "edad": edad,
+        "especie": especie,
+        "fechas_esterilizacion":fecha_esterilizacion
+    }
+    
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(sql,parametros)
+                print(f"Dato insertado \n {parametros}")
+            conn.commit()
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"Error al insertar datos: {err} \n {parametros}")    
 
-def create_gatos(
+def create_aves(
         id: int,
-        nombres: str,
+        nombre: str,
         edad: int,
         especie: str,
-        control_vuelo: str,
-        tipo_jaula: str
+        control_vuelo : str,
+        tipo_jaula : str
 ):
-    pass
+    sql = (
+        "INSERT INTO AVES (id, nombre, edad, especie, control_vuelo, tipo_jauña)"
+        "VALUES (:id,:nombre,:edad,:especie,:control_vuelo,:tipo_jaula)"
+    )
+        
+    parametros = {
+        "id": id,
+        "nombre": nombre,
+        "edad": edad,
+        "especie": especie,
+        "control_vuelo": control_vuelo,
+        "tipo_jaula": tipo_jaula
+    }
+    
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(sql,parametros)
+                print(f"Dato insertado \n {parametros}")
+            conn.commit()
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"Error al insertar datos: {err} \n {parametros}")    
+    
 
-# from datetime import datetime
-# # CREATE
-# def create_persona(rut, nombres, apellidos=None, fecha_nacimiento=None, cod_area="+569", numero_telefono=None):
-#     sql = (
-#     "INSERT INTO personas (rut, nombres, apellidos, fecha_nacimiento, cod_area, numero_telefono) "
-#     "VALUES (:rut, :nombres, :apellidos, :fecha_nacimiento, :cod_area, :numero_telefono)"
-#     )
-#     if fecha_nacimiento:
-#         bind_fecha = datetime.strptime(fecha_nacimiento, "%Y-%m-%d")
-#     else:
-#         bind_fecha = None
-#     with get_connection() as conn:
-#         with conn.cursor() as cur:
-#             cur.execute(sql, {
-#             "rut": rut,
-#             "nombres": nombres,
-#             "apellidos": apellidos,
-#             "fecha_nacimiento": bind_fecha,
-#             "cod_area": cod_area,
-#             "numero_telefono": numero_telefono,
-#             })
-#         conn.commit()
-#     print(f"Persona con RUT={rut} creada.")
-# create_persona(
-#     rut="12314984-9",
-#     nombres="Roberto Mandril",
-#     apellidos="Manda Jara"
-# )
-# # READ
-# def list_personas(limit: int = 100):
-#     sql = f"SELECT * FROM personas FETCH FIRST {limit} ROWS ONLY"
-#     results = []
-#     with get_connection() as conn:
-#         with conn.cursor() as cur:
-#             cur.execute(sql)
-#             for row in cur:
-#                 rut, nombres, apellidos, fecha_nacimiento, cod_area, numero_telefono = row
-#                 results.append({
-#                 "rut": rut,
-#                 "nombres": nombres,
-#                 "apellidos": apellidos,
-#                 "fecha_nacimiento": fecha_nacimiento.isoformat() if fecha_nacimiento else None,
-#                 "cod_area": cod_area,
-#                 "numero_telefono": numero_telefono,
-#                 })
-#     return results
-# print(list_personas())
+
+def read_mascotas():
+    sql = (
+        "SELECT * FROM MASCOTAS"
+    )    
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                resultados = cur.execute(sql)
+                print(f"Consulta a la tabla MASCOTAS")
+                for fila in resultados:
+                    print(fila)
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"No se pudo crear la datos:")
+    
+def read_mascotas_by_id(id):
+    sql = (
+        "SELECT * FROM MASCOTAS WHERE id"
+    )    
+
+    parametros = {"id":id}
+
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                resultados = cur.execute(sql,parametros)
+                print(f"Consulta a la tabla MASCOTAS por ID")
+                for fila in resultados:
+                    print(fila)
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"No se pudo crear la datos:")
+
+def read_perros():
+    sql = (
+        "SELECT * FROM PERROS"
+    )    
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                resultados = cur.execute(sql)
+                print(f"Consulta a la tabla PERROS")
+                for fila in resultados:
+                    print(fila)
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"No se pudo crear la datos:")
+
+def read_perros_by_id(id):
+    sql = (
+        "SELECT * FROM PERROS WHERE id"
+    )    
+
+    parametros = {"id":id}
+
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                resultados = cur.execute(sql,parametros)
+                print(f"Consulta a la tabla PERROS por ID")
+                for fila in resultados:
+                    print(fila)
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"No se pudo crear la datos:")
+
+def read_gatos():
+    sql = (
+        "SELECT * FROM GATOS"
+    )    
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                resultados = cur.execute(sql)
+                print(f"Consulta a la tabla GATOS")
+                for fila in resultados:
+                    print(fila)
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"No se pudo crear la datos:")
+
+
+def read_gatos_by_id(id):
+    sql = (
+        "SELECT * FROM GATOS WHERE id"
+    )    
+
+    parametros = {"id":id}
+
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                resultados = cur.execute(sql,parametros)
+                print(f"Consulta a la tabla GATOS por ID")
+                for fila in resultados:
+                    print(fila)
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"No se pudo crear la datos:")
+
+def read_aves():
+    sql = (
+        "SELECT * FROM AVES"
+    )    
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                resultados = cur.execute(sql)
+                print(f"Consulta a la tabla AVES")
+                for fila in resultados:
+                    print(fila)
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"No se pudo crear la datos:")
+
+def read_aves_by_id(id):
+    sql = (
+        "SELECT * FROM AVES WHERE id"
+    )    
+
+    parametros = {"id":id}
+
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                resultados = cur.execute(sql,parametros)
+                print(f"Consulta a la tabla AVES por ID")
+                for fila in resultados:
+                    print(fila)
+    except oracledb.DatabaseError as e:
+        err = e
+        print(f"No se pudo crear la datos:")
