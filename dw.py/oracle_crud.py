@@ -20,7 +20,8 @@ def create_schema(query):
         err = e
         print(f"No se pudo crear la tabla: {err} \n {query}")
 
-tables = [
+def create_all_tables():
+    tables = [
     (
         "CREATE TABLE mascota ("
         "id INTEGER PRIMARY KEY,"
@@ -58,8 +59,8 @@ tables = [
     )
 ]
 
-for query in tables:
-    create_schema(query)
+    for query in tables:
+        create_schema(query)
 
 
 # PERSONAS
@@ -162,7 +163,7 @@ def create_aves(
         tipo_jaula : str
 ):
     sql = (
-        "INSERT INTO AVES (id, nombre, edad, especie, control_vuelo, tipo_jauña)"
+        "INSERT INTO AVES (id, nombre, edad, especie, control_vuelo, tipo_jaula)"
         "VALUES (:id,:nombre,:edad,:especie,:control_vuelo,:tipo_jaula)"
     )
         
@@ -351,6 +352,40 @@ def update_mascotas(
         conn.commit()
         print(f"Persona con nombre={nombre} actualizada.") 
 
+def update_perros(
+    id,
+    nombre: Optional[str] = None,
+    edad: Optional[str] = None,
+    especie: Optional[str] = None,
+    vacunas_aplicadas: Optional[str] = None,
+    
+):
+    modificaciones = []
+    parametros = {"id": id}
+
+    if nombre is not None:
+        modificaciones.append("nombre =: nombre")
+        parametros["nombre"] = nombre
+    if vacunas_aplicadas is not None:
+        modificaciones.append("vacunas_aplicadas =: vacunas_aplicadas")
+        parametros["vacunas_aplicadas"] = nombre
+    if edad is not None:
+        modificaciones.append("edad =: edad")
+        parametros["edad"] = edad
+    if especie is not None:
+        modificaciones.append("espeice =: especie")
+        parametros["especie"] = especie
+    if not modificaciones:
+        return print("No hay campos para actualizar.")
+
+    sql = f"UPDATE mascotas SET {", ".join(modificaciones)} WHERE id =: id"
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, parametros)
+        conn.commit()
+        print(f"Persona con nombre={nombre} actualizada.") 
+
 def delete_mascotas(id: int):
     sql = (
         "DELETE FROM MASCOTAS WHERE id = :id"
@@ -368,6 +403,40 @@ def delete_mascotas(id: int):
         err = e
         print(f"Errormal eliminar dato: {err} \n {sql} \n {parametros}:")
 
+def update_gatos(
+    id,
+    nombre: Optional[str] = None,
+    edad: Optional[str] = None,
+    especie: Optional[str] = None,
+    fecha_esterilizacion: Optional[str] = None,
+    
+):
+    modificaciones = []
+    parametros = {"id": id}
+
+    if nombre is not None:
+        modificaciones.append("nombre =: nombre")
+        parametros["nombre"] = nombre
+    if fecha_esterilizacion is not None:
+        modificaciones.append("fecha_esterilizacion =: fecha_esterilizacion")
+        parametros["fecha_esterilizacion"] = fecha_esterilizacion
+    if edad is not None:
+        modificaciones.append("edad =: edad")
+        parametros["edad"] = edad
+    if especie is not None:
+        modificaciones.append("espeice =: especie")
+        parametros["especie"] = especie
+    if not modificaciones:
+        return print("No hay campos para actualizar.")
+
+    sql = f"UPDATE mascotas SET {", ".join(modificaciones)} WHERE id =: id"
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, parametros)
+        conn.commit()
+        print(f"Persona con nombre={nombre} actualizada.") 
+
 def delete_perros(id: int):
     sql = (
         "DELETE FROM PERROS WHERE id = :id"
@@ -384,6 +453,44 @@ def delete_perros(id: int):
     except oracledb.DatabaseError as e:
         err = e
         print(f"Errormal eliminar dato: {err} \n {sql} \n {parametros}:")
+
+def update_aves(
+    id,
+    nombre: Optional[str] = None,
+    edad: Optional[str] = None,
+    especie: Optional[str] = None,
+    tipo_jaula: Optional[str] = None,
+    control_vuelo: Optional[str] = None,
+    
+):
+    modificaciones = []
+    parametros = {"id": id}
+
+    if nombre is not None:
+        modificaciones.append("nombre =: nombre")
+        parametros["nombre"] = nombre
+    if edad is not None:
+        modificaciones.append("edad =: edad")
+        parametros["edad"] = edad
+    if tipo_jaula is not None:
+        modificaciones.append("tipo_jaula =: tipo_jaula")
+        parametros["tipo_jaula"] = tipo_jaula
+    if control_vuelo is not None:
+        modificaciones.append("control_vuelo =: control_vuelo")
+        parametros["control_vuelo"] = control_vuelo
+    if especie is not None:
+        modificaciones.append("espeice =: especie")
+        parametros["especie"] = especie
+    if not modificaciones:
+        return print("No hay campos para actualizar.")
+
+    sql = f"UPDATE mascotas SET {", ".join(modificaciones)} WHERE id =: id"
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, parametros)
+        conn.commit()
+        print(f"Persona con nombre={nombre} actualizada.") 
 
 def delete_gatos(id: int):
     sql = (
@@ -439,6 +546,335 @@ def menu_mascota():
             """
         )
 
+        opcion = input("Selecciona una opcion [1-5, 0 para volver al menu principal]:")
+
+        if opcion == "0":
+            os.system("cls")
+            print("Volviendo al menú principal ヾ(•ω•`)o")
+            input("Presiona ENTER para continuar...")
+            break
+        elif opcion == "1":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                nombres = input("Ingrese nombres de la persona: ")
+                fecha_nacimiento = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                especie = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                edad = input("Ingrese la edad")
+                create_mascotas(id,edad,nombres,fecha_nacimiento,especie)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+
+            input("Presiona ENTER para continuar...")
+        elif opcion == "2":
+            read_mascotas()
+            input("Presiona ENTER para continuar...")
+        elif opcion == "3":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                read_mascotas_by_id(id)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+            
+            input("Presiona ENTER para continuar...")
+        elif opcion == "4":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                print("⚠️ Sólo digite cuándo quiera modificar el dato")
+                nombres = input("Ingrese nombres de la persona: ")
+                fecha_nacimiento = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                especie = input("Ingresa la especie: ")
+                if len(nombres.strip()) == 0:
+                    nombres = None
+                if len(especie.strip()) == 0:
+                    especie = None
+                if len(fecha_nacimiento.strip()) == 0:
+                    fecha_nacimiento = None
+                if len(edad.strip()) == 0:
+                    edad = None
+                update_mascotas(id,nombres,fecha_nacimiento,edad)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+
+            input("Presiona ENTER para continuar...")
+        elif opcion == "5":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                delete_mascotas(id)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+            
+            input("Presiona ENTER para continuar...")
+        else:
+            print("Opción invalida")
+            input("Presiona ENTER para continuar...")
+            break
+
+def menu_perros():
+    while True:
+        os.system("cls")
+        print(
+            """
+            =======================================
+                         MENU PERROS 
+            =======================================
+             1. INSERTAR PERROS
+             2. LEER PERROS
+             3. LEER PERROS POR ID
+             4. MODIFICAR PERROS 
+             5. ELIMINAR PERROS
+             0. SALIR
+            ======================================
+
+            """
+        )
+        opcion = input("Selecciona una opcion [1-5, 0 para volver al menu principal]:")
+
+        if opcion == "0":
+            os.system("cls")
+            print("Volviendo al menú principal ヾ(•ω•`)o")
+            input("Presiona ENTER para continuar...")
+            break
+        elif opcion == "1":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                nombres = input("Ingrese nombres de la persona: ")
+                fecha_nacimiento = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                especie = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                vacunas_aplicadas = input("Ingrese vacunas aplicadas")
+                edad = input("Ingrese la edad")
+                create_perros(id,nombres,fecha_nacimiento,especie,vacunas_aplicadas,edad)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+
+            input("Presiona ENTER para continuar...")
+        elif opcion == "2":
+            read_perros()
+            input("Presiona ENTER para continuar...")
+        elif opcion == "3":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                read_perros_by_id(id)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+            
+            input("Presiona ENTER para continuar...")
+        elif opcion == "4":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                print("⚠️ Sólo digite cuándo quiera modificar el dato")
+                nombres = input("Ingrese nombres de la persona: ")
+                fecha_nacimiento = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                especie = input("Ingresa la especie: ")
+                vacunas_aplicadas = input("Ingrese las vacunas aplicadas")
+                edad = input("Ingrese la edad")
+                if len(nombres.strip()) == 0:
+                    nombres = None
+                if len(especie.strip()) == 0:
+                    especie = None
+                if len(fecha_nacimiento.strip()) == 0:
+                    fecha_nacimiento = None
+                if len(vacunas_aplicadas.strip()) == 0:
+                    vacunas_aplicadas = None
+                if len(edad.strip()) == 0:
+                    edad = None
+                update_mascotas(id,nombres,especie,fecha_nacimiento)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+
+            input("Presiona ENTER para continuar...")
+        elif opcion == "5":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                delete_perros(id)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+            
+            input("Presiona ENTER para continuar...")
+        else:
+            print("Opción invalida")
+            input("Presiona ENTER para continuar...")
+            break
+
+def menu_gatos():
+    while True:
+        os.system("cls")
+        print(
+            """
+            =======================================
+                         MENU GATOS 
+            =======================================
+             1. INSERTAR GATOS
+             2. LEER GATOS
+             3. LEER GATOS POR ID
+             4. MODIFICAR GATOS 
+             5. ELIMINAR GATOS
+             0. SALIR
+            ======================================
+
+            """
+        )
+
+        opcion = input("Selecciona una opcion [1-5, 0 para volver al menu principal]:")
+
+        if opcion == "0":
+            os.system("cls")
+            print("Volviendo al menú principal ヾ(•ω•`)o")
+            input("Presiona ENTER para continuar...")
+            break
+        elif opcion == "1":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                nombres = input("Ingrese nombres de la persona: ")
+                fecha_nacimiento = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                especie = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                fecha_esterilizacion = ("Ingrese la fecha de esterilizacion")
+                edad = input("Ingrese la edad")
+                create_gatos(id,nombres,fecha_nacimiento,especie,fecha_esterilizacion,edad)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+
+            input("Presiona ENTER para continuar...")
+        elif opcion == "2":
+            read_gatos()
+            input("Presiona ENTER para continuar...")
+        elif opcion == "3":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                read_gatos_by_id(id)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+            
+            input("Presiona ENTER para continuar...")
+        elif opcion == "4":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                print("⚠️ Sólo digite cuándo quiera modificar el dato")
+                nombres = input("Ingrese nombres de la persona: ")
+                fecha_nacimiento = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                especie = input("Ingresa la especie: ")
+                edad = input("Ingrese la edad")
+                fecha_esterilizacion = ("Ingrese la fecha de esterilizacion")
+                if len(nombres.strip()) == 0:
+                    nombres = None
+                if len(especie.strip()) == 0:
+                    especie = None
+                if len(fecha_nacimiento.strip()) == 0:
+                    fecha_nacimiento = None
+                if len(fecha_esterilizacion.strip()) == 0:
+                    fecha_esterilizacion = None
+                if len(edad.strip()) == 0:
+                    edad = None
+                update_gatos(id,nombres,especie,fecha_esterilizacion)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+
+            input("Presiona ENTER para continuar...")
+        elif opcion == "5":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                delete_gatos(id)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+            
+            input("Presiona ENTER para continuar...")
+        else:
+            print("Opción invalida")
+            input("Presiona ENTER para continuar...")
+            break
+
+
+def menu_aves():
+    while True:
+        os.system("cls")
+        print(
+            """
+            =======================================
+                         MENU AVES 
+            =======================================
+             1. INSERTAR AVES
+             2. LEER AVES
+             3. LEER MAVES POR ID
+             4. MODIFICAR AVES 
+             5. ELIMINAR AVES
+             0. SALIR
+            ======================================
+
+            """
+        )
+
+        opcion = input("Selecciona una opcion [1-5, 0 para volver al menu principal]:")
+
+        if opcion == "0":
+            os.system("cls")
+            print("Volviendo al menú principal ヾ(•ω•`)o")
+            input("Presiona ENTER para continuar...")
+            break
+        elif opcion == "1":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                nombres = input("Ingrese nombres de la persona: ")
+                fecha_nacimiento = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                especie = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                control_vuelo = ("Ingrese el cotrol de vuelo")
+                tipo_jaula = ("Ingrese el tipo de jaula")
+                edad = input("Ingrese la edad")
+                create_aves(id,nombres,fecha_nacimiento,especie,control_vuelo,tipo_jaula,edad)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+
+            input("Presiona ENTER para continuar...")
+        elif opcion == "2":
+            read_aves()
+            input("Presiona ENTER para continuar...")
+        elif opcion == "3":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                read_aves_by_id(id)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+            
+            input("Presiona ENTER para continuar...")
+        elif opcion == "4":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                print("⚠️ Sólo digite cuándo quiera modificar el dato")
+                nombres = input("Ingrese nombres de la persona: ")
+                fecha_nacimiento = input("Ingresa la fecha de nacimiento (año-mes-dia). Ej: 2002-12-30: ")
+                especie = input("Ingresa la especie: ")
+                control_vuelo = input("Ingrese el cotrol de vuelo")
+                tipo_jaula = input("Ingrese el tipo de jaula")
+                edad = input("Ingrese la edad")
+                if len(nombres.strip()) == 0:
+                    nombres = None
+                if len(especie.strip()) == 0:
+                    especie = None
+                if len(fecha_nacimiento.strip()) == 0:
+                    fecha_nacimiento = None
+                if len(control_vuelo.strip()) == 0:
+                    control_vuelo = None
+                if len(tipo_jaula.strip()) == 0:
+                    tipo_jaula = None
+                if len(edad.strip()) == 0:
+                    edad = None
+                update_aves(id,nombres,especie,tipo_jaula,control_vuelo,edad)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+
+            input("Presiona ENTER para continuar...")
+        elif opcion == "5":
+            try:
+                id = int(input("Ingrese el id numerico de la persona: "))
+                delete_gatos(id)
+            except ValueError:
+                print("Ingresaste un valor no númerico")
+            
+            input("Presiona ENTER para continuar...")
+        else:
+            print("Opción invalida")
+            input("Presiona ENTER para continuar...")
+            break
+
+
 def main(cls):
     while True:
         os.system(cls)
@@ -464,24 +900,52 @@ def main(cls):
             input("Presiona ENTER para continuar...")
             break
         elif opcion == "1":
+            create_all_tables
+            input("Presiona ENTER para continuar...")
+        elif opcion == "2":
             try:
-                id = input("Ingrese el id numerico de la mascota: ")
-                nombre = input("Ingrese el id numerico de la mascota: ")
-                especie = input("Ingrese el id numerico de la mascota: ")
+                id = input("Ingrese el id numerico de la Mascota: ")
+                nombre = input("Ingrese el id numerico de la Mascota: ")
+                especie = input("Ingrese el id numerico de la Mascota: ")
+                edad = input("Ingrese el id numerico de la Mascota: ")
             except ValueError:
                 return print("ingresaste un valor no numerico")
 
-            create_mascotas(id,nombre,especie)
+            create_mascotas(id,nombre,especie,edad)
             input("Presiona ENTER para continuar  ")
-
-        elif opcion == "2":
-            pass
         elif opcion == "3":
-            pass
+            try:
+                id = input("Ingrese el id numerico del Perro: ")
+                nombre = input("Ingrese el id numeriGatosco del Perro: ")
+                especie = input("Ingrese el id numerico del Perro: ")
+                edad = input("Ingrese el id numerico del Perro: ")
+            except ValueError:
+                return print("ingresaste un valor no numerico")
+
+            create_perros(id,nombre,especie)
+            input("Presiona ENTER para continuar  ")
         elif opcion == "4":
-            pass
+            try:
+                id = input("Ingrese el id numerico de los Gatos: ")
+                nombre = input("Ingrese el id numerico de los Gatos: ")
+                especie = input("Ingrese el id numerico de los Gatos: ")
+                edad = input("Ingrese el id numerico de los Gatos: ")
+            except ValueError:
+                return print("ingresaste un valor no numerico")
+
+            create_gatos(id,nombre,especie,edad)
+            input("Presiona ENTER para continuar  ")
         elif opcion == "5":
-            pass
+            try:
+                id = input("Ingrese el id numerico de las Aves: ")
+                nombre = input("Ingrese el id numerico de las Aves: ")
+                especie = input("Ingrese el id numerico de las Aves: ")
+                edad = input("Ingrese el id numerico de las Aves: ")
+            except ValueError:
+                return print("ingresaste un valor no numerico")
+
+            create_aves(id,nombre,especie,edad)
+            input("Presiona ENTER para continuar  ")
 
 if __name__ == "__name__":
     main()
