@@ -509,7 +509,7 @@ def delete_gatos(id: int):
         err = e
         print(f"Errormal eliminar dato: {err} \n {sql} \n {parametros}:")
 
-def delete_AVES(id: int):
+def delete_aves(id: int):
     sql = (
         "DELETE FROM AVES WHERE id = :id"
     )
@@ -677,7 +677,7 @@ def menu_perros():
                     vacunas_aplicadas = None
                 if len(edad.strip()) == 0:
                     edad = None
-                update_mascotas(id,nombres,especie,fecha_nacimiento)
+                update_perros(id,nombres,especie,fecha_nacimiento)
             except ValueError:
                 print("Ingresaste un valor no númerico")
 
@@ -864,7 +864,7 @@ def menu_aves():
         elif opcion == "5":
             try:
                 id = int(input("Ingrese el id numerico de la persona: "))
-                delete_gatos(id)
+                delete_aves(id)
             except ValueError:
                 print("Ingresaste un valor no númerico")
             
@@ -919,10 +919,11 @@ def main(cls):
                 nombre = input("Ingrese el id numeriGatosco del Perro: ")
                 especie = input("Ingrese el id numerico del Perro: ")
                 edad = input("Ingrese el id numerico del Perro: ")
+                vacunas_aplicadas = input("Ingrese las vacunas aplicadas: ")
             except ValueError:
                 return print("ingresaste un valor no numerico")
 
-            create_perros(id,nombre,especie)
+            create_perros(id,nombre,especie,vacunas_aplicadas)
             input("Presiona ENTER para continuar  ")
         elif opcion == "4":
             try:
@@ -930,10 +931,11 @@ def main(cls):
                 nombre = input("Ingrese el id numerico de los Gatos: ")
                 especie = input("Ingrese el id numerico de los Gatos: ")
                 edad = input("Ingrese el id numerico de los Gatos: ")
+                fecha_esterilizacion = input("Ingrese la fecha de esterilizacion")
             except ValueError:
                 return print("ingresaste un valor no numerico")
 
-            create_gatos(id,nombre,especie,edad)
+            create_gatos(id,nombre,especie,edad,fecha_esterilizacion)
             input("Presiona ENTER para continuar  ")
         elif opcion == "5":
             try:
@@ -941,10 +943,12 @@ def main(cls):
                 nombre = input("Ingrese el id numerico de las Aves: ")
                 especie = input("Ingrese el id numerico de las Aves: ")
                 edad = input("Ingrese el id numerico de las Aves: ")
+                tipo_jaula = input("Ingrese el tipo de jaula")
+                control_vuelo = input("Ingrese el control de vuelo de la ave")
             except ValueError:
                 return print("ingresaste un valor no numerico")
 
-            create_aves(id,nombre,especie,edad)
+            create_aves(id,nombre,especie,edad,tipo_jaula,control_vuelo)
             input("Presiona ENTER para continuar  ")
 
 if __name__ == "__name__":
