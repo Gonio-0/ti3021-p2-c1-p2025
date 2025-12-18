@@ -21,7 +21,7 @@ def get_connection():
 
 def create_table_users():
     query = (
-        "CREATE TABLE usuarios ("
+        "CREATE TABLE USUARIOS ("
         "id INTEGER PRIMARY KEY,"
         "username VARCHAR2(16) NOT NULL UNIQUE,"
         "password VARCHAR2(128) NOT NULL"
@@ -56,7 +56,7 @@ print(f"Largo del hash: {len(hashed_password_string)}")
 create_table_users()
 
 query = (
-    "INSERT INTO usuarios(id, username, password)"
+    "INSERT INTO USUARIOS(id, username, password)"
     "VALUES (:id, :username, :password)"
 )
 

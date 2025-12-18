@@ -18,7 +18,7 @@ class Database:
     def create_all_tables(self):
         tables = [
             (
-                "CREATE TABLE USERS("
+                "CREATE TABLE USUARIOS("
                 "id INTEGER PRIMARY KEY,"
                 "username VARCHAR(32) UNIQUE,"
                 "password VARCHAR(128)"
@@ -56,7 +56,7 @@ class Auth:
         if len(resultado) == 0:
             return print("No hay coincidencias")
 
-        stored_hash = resultado[0][2]          # cadena desde DB
+        stored_hash = resultado[0][2]          
         stored_hash_bytes = stored_hash.encode("utf-8")
 
         if bcrypt.checkpw(password, stored_hash_bytes):
@@ -119,4 +119,5 @@ if __name__ == "__main__":
         dsn=os.getenv("ORACLE_DSN")
     )
 
-    Auth.login(db,"system","oracle")
+    Auth.login(db,"diego","hola123")
+
