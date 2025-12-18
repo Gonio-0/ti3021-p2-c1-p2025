@@ -43,11 +43,13 @@ incoming_password = input("Ingresa una contraseña: ").encode("UTF-8")
 # Paso 2. Genero la sal 🧂
 salt = bcrypt.gensalt(rounds=12)
 # Paso 3. Hasheo la contraseña con la sal generada 🧑‍💻
-hashed_password = bcrypt.hashpw(incoming_password,salt)
+hashed_password_bytes = bcrypt.hashpw(incoming_password, salt)
+hashed_password_string = hashed_password_bytes.decode('utf-8')  # <-- CORRECCIÓN
 
 print(f"Contraseña obtenida: {incoming_password}")
-print(f"Contraseña hasheada: {hashed_password}")
-print(f"Largo del hash: {len(hashed_password)}")
+print(f"Contraseña hasheada (bytes): {hashed_password_bytes}")
+print(f"Contraseña hasheada (string): {hashed_password_string}")
+print(f"Largo del hash: {len(hashed_password_string)}")
 
 
 # Paso 4. Guardarlo en la base de datos
@@ -61,13 +63,13 @@ query = (
 parametros = {
     "id": 1,
     "username": new_username,
-    "password": hashed_password
+    "password": hashed_password_string  # <-- CORRECCIÓN
 }
 
 try:
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute(query,parametros)
+            cur.execute(query, parametros)
             print(f"Ejecución lista \n {query}")
         conn.commit()
 except oracledb.DatabaseError as e:
