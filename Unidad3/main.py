@@ -119,4 +119,4 @@ if __name__ == "__main__":
         dsn=os.getenv("ORACLE_DSN")
     )
 
-    Auth.login(db,"system","oracle")
+    Auth.login(db,"diego","hola123")

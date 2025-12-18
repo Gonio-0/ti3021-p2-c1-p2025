@@ -60,7 +60,7 @@ class Auth:
             print("Usuario no encontrado")
             return False
 
-        stored_hash = resultado[0][2]  # cadena desde DB
+        stored_hash = resultado[0][2] 
         stored_hash_bytes = stored_hash.encode("utf-8")
 
         if bcrypt.checkpw(password, stored_hash_bytes):
@@ -222,7 +222,7 @@ def menu_principal(db: Database, username: str):
             menu_finanzas()
             
         elif opcion == "2":
-            # Solo permite crear tablas si el usuario es "admin" o "system"
+            #
             if username.lower() in ["admin", "system"]:
                 print("Creando tablas en la base de datos...")
                 db.create_all_tables()
@@ -324,14 +324,14 @@ def inicializar_sistema():
     """Función principal que inicializa todo el sistema"""
     print("Inicializando sistema...")
     
-    # Crear conexión a la base de datos
+    
     db = Database(
         username=os.getenv("ORACLE_USER"),
         password=os.getenv("ORACLE_PASSWORD"),
         dsn=os.getenv("ORACLE_DSN")
     )
     
-    # Verificar conexión
+    
     try:
         with db.get_connection() as conn:
             print("✓ Conexión a la base de datos establecida")
@@ -341,15 +341,15 @@ def inicializar_sistema():
         input("Presione ENTER para salir...")
         return
     
-    # Ciclo principal del sistema
+    a
     while True:
-        # Menú de autenticación
+        
         autenticado, username = menu_autenticacion(db)
         
         if not autenticado:
             break
             
-        # Menú principal (solo si se autenticó correctamente)
+        
         menu_principal(db, username)
 
 if __name__ == "__main__":

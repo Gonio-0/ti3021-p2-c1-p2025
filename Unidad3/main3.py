@@ -157,7 +157,7 @@ def menu_principal(db: Database, username: str):
           SISTEMA INTEGRADO - Usuario: {username}
         =======================================
          1. INDICADORES ECONÓMICOS
-         2. CREAR TABLAS (Solo administrador)
+         2. CREAR TABLAS 
          3. CERRAR SESIÓN
         =======================================
         """)
@@ -265,9 +265,9 @@ def inicializar_sistema():
     # Verificar conexión
     try:
         with db.get_connection() as conn:
-            print("✓ Conexión a la base de datos establecida")
+            print(" Conexión a la base de datos establecida")
     except Exception as e:
-        print(f"✗ Error al conectar a la base de datos: {e}")
+        print(f" Error al conectar a la base de datos: {e}")
         print("Asegúrate de que las variables de entorno estén configuradas correctamente")
         input("Presione ENTER para salir...")
         return
